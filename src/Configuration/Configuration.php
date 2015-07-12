@@ -2,8 +2,8 @@
 
 namespace JanSuchanek\DataGrid\Configuration;
 
-use DataGrid\Components\DataGrid\Item\TextItem;
-use DataGrid\Components\DataGrid\Item\NumberItem;
+use JanSuchanek\DataGrid\Components\DataGrid\Item\TextItem;
+use JanSuchanek\DataGrid\Components\DataGrid\Item\NumberItem;
 
 class Configuration extends \Nette\Object
 {

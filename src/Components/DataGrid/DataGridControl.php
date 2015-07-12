@@ -2,8 +2,8 @@
 
 namespace JanSuchanek\DataGrid\Components\DataGrid;
 
-use DataGrid\Components\VisualPaginator\VisualPaginatorControlFactoryInterface;
-use DataGrid\Configuration\Configuration;
+use JanSuchanek\DataGrid\Components\VisualPaginator\VisualPaginatorControlFactoryInterface;
+use JanSuchanek\DataGrid\Configuration\Configuration;
 use Nette\Application\UI;
 use Nette\Bridges\ApplicationLatte\Template;
 
@@ -133,7 +133,8 @@ class DataGridControl extends UI\Control
         $form->addSubmit('search', 'Odeslat')->onClick[] = function (\Nette\Forms\Controls\SubmitButton $button) {
             $form = $button->getForm();
             $values = $form->getHttpData();
-            $this->config->query = $this->query = $values['query'];
+            $this->query = $values['query'];
+            $this->configuration->setQuery($this->query);
             //$this->redirect("this");
         };
 

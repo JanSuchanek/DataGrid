@@ -1,0 +1,75 @@
+<p>Nalezeno: {$itemsCount}</p>
+
+
+{control vp}
+
+{form listForm}
+<table border="1">
+<thead>
+<tr>
+	{foreach $textItems as $textKey => $textItem}
+	<th>
+	{if $textKey != $primary}
+		<input type=text name="query[{$textKey}]" value="{ifset $config->query[$textKey]}{$config->query[$textKey]}{/ifset}">
+	{/if}
+	</th>
+	{/foreach}
+	<th>
+		<input type=submit name="search" value="Hledej">
+		<input type=submit name="cancel" value="Zrušit">
+	</th>
+</tr>
+
+<tr>
+	{foreach $config->textItems as $textKey => $textItem}
+	<th>
+		{if $order == $textKey}
+			{$textItem->label}
+			
+			{if $sort == 'DESC'}
+			<a n:href="this, sort => NULL">UP</a> DOWN
+			{else}
+			UP <a n:href="this, sort => 'DESC'">DOWN</a>
+			{/if}
+		{else}
+			<a n:href="this, order => $textKey, sort => NULL">{$textItem->label}</a>
+		{/if}
+	</th>
+	{/foreach}
+	<th>Akce</th>
+</tr>
+</thead>
+
+<tbody>
+	<tr n:foreach="$config->items as $item">
+		{foreach $config->textItems as $textKey => $textItem}
+		<td>
+			{if $textKey == $config->primary}<input type=checkbox name="items[]" value={$item->$primary}>{/if}
+			{if $config->id == $item->$primary}
+				{if $textKey != $primary}
+					<input type=text name="item[{$textKey}]" value="{ifset $item->$textKey}{$item->$textKey}{/ifset}">
+				{else}
+					<input type=hidden name="item[{$textKey}]" value={$item->$primary}>
+					{$item->$textKey}
+				{/if}
+			{elseif $item->$textKey}
+				{$item->$textKey}
+			{/if}			
+		</td>
+		{/foreach}
+		<td>
+			{if $config->id == $item->$primary && $textKey != $primary}
+				<input type=submit name="save" value="Upravit">
+			{else}
+				<a href="{plink edit $item->$primary}">Upravit</a>
+				<a href="{link edit $item->$primary}">Inline</a>
+			{/if}
+		</td>			
+	</tr>
+</tbody>
+</table>
+{input select}
+{input submit}
+{/form}
+
+{control vp}

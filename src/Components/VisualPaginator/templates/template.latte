@@ -1,0 +1,41 @@
+{*
+ * @version    $Id: template.phtml 2 2009-07-13 20:58:52Z david@grudl.com $
+ * @param Paginator $paginator
+ * @param array     $steps
+ *}
+<div n:if="$paginator->pageCount > 1" class="row-fluid pagination pagination-centered pagination-small">
+	<ul class="pull-right hidden-phone">
+		<li class="disabled"><span>Řádkování:</span></li>
+		{foreach $limits as $row}
+			<li n:class="$paginator->getItemsPerPage() == $row ? active"><a n:href="this, limit => $row" class="ajax">{$row}</a></li>
+		{/foreach}
+	</ul>
+
+	<ul class="pull-left">
+		<li class="disabled"><span>Celkem: <strong>{$paginator->itemCount}</strong></span></li>
+	</ul>
+
+	<ul n:if="$paginator->pageCount > 1" >
+		{if $paginator->isFirst()}
+		<li class="disabled"><span>« Předchozí</span></li>
+		{else}
+		<li><a n:href="this, page => $paginator->page - 1" class="ajax">« Předchozí</a></li>
+		{/if}
+
+		{foreach $steps as $step}
+		{if $step == $paginator->page}
+			<li class="active"><span>{$step}</span></li>
+		{else}
+			<li class="hidden-phone"><a n:href="this, page => $step" class="ajax">{$step}</a></li>
+		{/if}
+		{if $iterator->nextValue > $step + 1}<li class="disabled hidden-phone"><span>…</span></li>{/if}
+		{/foreach}
+
+		{if $paginator->isLast()}
+		<li class="disabled"><span>Další »</span></li>
+		{else}
+		<li><a n:href="this, page => $paginator->page + 1" class="ajax">Další »</a></li>
+		{/if}
+	</ul>
+
+</div>

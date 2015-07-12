@@ -1,0 +1,4 @@
+services:
+    - DataGrid\Components\DataGrid\DataGridControlFactoryInterface
+    - DataGrid\Components\VisualPaginator\VisualPaginatorControlFactoryInterface
+    - DataGrid\Configuration\Configuration

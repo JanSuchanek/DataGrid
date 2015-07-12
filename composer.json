@@ -1,5 +1,5 @@
 {
-	"name": "jan-suchanek/datagrid",
+	"name": "jansuchanek/datagrid",
 	"license": "MIT",
 	"require": {
 		"php": ">= 5.3.7",
@@ -13,7 +13,8 @@
 	  "psr-4": {
 		"JanSuchanek\\DataGrid\\": "src"
 	  }
-	}
+	},
+	"minimum-stability": "dev"
 }
 
 

@@ -8,7 +8,7 @@ namespace JanSuchanek\DataGrid\Components\DataGrid\Item;
  */
 class TextItem extends Item
 {
-    
+
     public $operator = ' ILIKE ?';
     public $pattern = [NULL, '%'];
 

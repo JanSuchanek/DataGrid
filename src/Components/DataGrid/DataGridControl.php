@@ -10,6 +10,7 @@ use JanSuchanek\DataGrid\Components\DataGrid\Item\TextItem;
 use Nette\Forms\Controls\SubmitButton;
 
 /**
+ * DataGridControl
  * @property-read Template $template
  */
 class DataGridControl extends Control
@@ -17,9 +18,8 @@ class DataGridControl extends Control
     const DEFAULT_VIEW = 'default';
     const DEFAULT_PRIMARY = 'id';
 
-    /* @var VisualPaginatorControlFactoryInterface $visualPaginatorFactoryInterface */
+    /** @var VisualPaginatorControlFactoryInterface $visualPaginatorFactoryInterface */
     protected $visualPaginatorFactoryInterface;
-
 
     protected $primary;
     protected $view;
@@ -27,6 +27,13 @@ class DataGridControl extends Control
     protected $massActions = [];
     protected $cols = [];
     protected $items = [];
+
+    public $onFindItems = [];
+    public $onQueryProcess = [];
+    public $onCancelProcess = [];
+    public $onSaveProcess = [];
+    public $onSubmitProcess = [];
+    public $onInlineEdit = [];
 
     /** @persistent */
     public $order;
@@ -40,13 +47,6 @@ class DataGridControl extends Control
     /** @persistent */
     public $id;
 
-    public $onFindItems = [];
-    public $onQueryProcess = [];
-    public $onCancelProcess = [];
-    public $onSaveProcess = [];
-    public $onSubmitProcess = [];
-    public $onInlineEdit = [];
-
     public function __construct(VisualPaginatorControlFactoryInterface $visualPaginatorFactoryInterface)
     {
         $this->visualPaginatorFactoryInterface = $visualPaginatorFactoryInterface;
@@ -59,34 +59,23 @@ class DataGridControl extends Control
 
     public function createComponentListForm()
     {
-
-
         $form = new Form;
         $form->addSelect("select", "Výběr akce", $this->getMassActions());
         $primary = $this->getPrimary();
 
-        $query = $this->getQuery();
-        $where = $this->getWhere();
-        $items = $this->getItems();
-        $cols = $this->getCols();
-        $id = $this->getId();
-        $order = $this->getOrder();
-        $sort = $this->getSort();
-
-
-
         $this->onFindItems($this);
 
-        $this->onInlineEdit($form, $cols, $items, $id);
+        $this->onInlineEdit($form, $this->getCols(), $this->getItems(), $this->getId());
 
         $container = $form->addContainer('items');
 
-        foreach ($items as $item) {
+        foreach ($this->getItems() as $item) {
             $container->addCheckbox($item->$primary);
         }
 
+        $query = $this->getQuery();
         $container = $form->addContainer('query');
-        foreach($cols as $key => $col){
+        foreach($this->getCols() as $key => $col){
             $input = $container->addText($col->name, $col->name);
 
             if(isset($query[$key])){
@@ -126,6 +115,7 @@ class DataGridControl extends Control
     public function handleEdit($id = NULL)
     {
         $this->id = (int)$id;
+        $this->redirect("this");
     }
 
     public function getItemCount()

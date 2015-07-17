@@ -66,7 +66,7 @@ class VisualPaginatorControl extends Control
 	{
 		$paginator = $this->getPaginator();
 		$page = $paginator->page;
-		
+
 		if ($paginator->pageCount < 2) {
 			$steps = array($page);
 
@@ -95,7 +95,7 @@ class VisualPaginatorControl extends Control
 	 */
 	public function loadState(array $params)
 	{
-		parent::loadState($params);		
+		parent::loadState($params);
 		$this->getPaginator()->page = $this->page;
 	}
 

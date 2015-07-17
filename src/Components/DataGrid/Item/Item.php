@@ -34,6 +34,8 @@ class Item extends \Nette\Object
      */
     private $icon;
 
+    private $selection = [];
+
     /**
      * @var array $types
      */
@@ -49,6 +51,24 @@ class Item extends \Nette\Object
      */
     public function __construct($name) {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $name
+     * @return Item
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
     }
 
     /**
@@ -133,21 +153,18 @@ class Item extends \Nette\Object
         return $this;
     }
 
-    /**
-     * @param string $name
-     * @param string
-     */
-    public function setType($name, $type)
+
+    public function setSelection($selection)
     {
-        $this->types[$name] = $type;
+        $this->selection = $selection;
     }
 
-    /**
-     * @return array
-     */
-    public function getTypes()
+    public function getSelect($name)
     {
-        return $this->types;
+        if(isset($this->selection[$name])){
+            return $this->selection[$name];
+        }
+
     }
 
 

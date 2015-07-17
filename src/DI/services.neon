@@ -1,4 +1,3 @@
 services:
     - JanSuchanek\DataGrid\Components\DataGrid\DataGridControlFactoryInterface
     - JanSuchanek\DataGrid\Components\VisualPaginator\VisualPaginatorControlFactoryInterface
-    - JanSuchanek\DataGrid\Configuration\Configuration

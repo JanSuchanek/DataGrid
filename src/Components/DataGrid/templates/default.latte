@@ -1,5 +1,10 @@
 <p>Nalezeno: {$itemsCount}</p>
 
+<p>Edit {$id}</p>
+
+{foreach $flashes as $flash}
+    <div class="flash {$flash->type}">{$flash->message}</div>
+{/foreach}
 
 {control vp}
 
@@ -7,25 +12,25 @@
 <table border="1">
 <thead>
 <tr>
-	{foreach $textItems as $textKey => $textItem}
+	{foreach $cols as $textKey => $textItem}
 	<th>
 	{if $textKey != $primary}
-		<input type=text name="query[{$textKey}]" value="{ifset $config->query[$textKey]}{$config->query[$textKey]}{/ifset}">
+		{input query-{$textKey}}
 	{/if}
 	</th>
 	{/foreach}
 	<th>
-		<input type=submit name="search" value="Hledej">
-		<input type=submit name="cancel" value="Zrušit">
+		{input search}
+		{input cancel}
 	</th>
 </tr>
 
 <tr>
-	{foreach $config->textItems as $textKey => $textItem}
+	{foreach $cols as $textKey => $textItem}
 	<th>
 		{if $order == $textKey}
 			{$textItem->label}
-			
+
 			{if $sort == 'DESC'}
 			<a n:href="this, sort => NULL">UP</a> DOWN
 			{else}
@@ -41,30 +46,43 @@
 </thead>
 
 <tbody>
-	<tr n:foreach="$config->items as $item">
-		{foreach $config->textItems as $textKey => $textItem}
+	<tr n:foreach="$items as $item">
+		{foreach $cols as $textKey => $textItem}
 		<td>
-			{if $textKey == $config->primary}<input type=checkbox name="items[]" value={$item->$primary}>{/if}
-			{if $config->id == $item->$primary}
+			{if $textKey == $primary}
+				{input items-{$item->$primary}}
+			{/if}
+			{if $id == $item->$primary}
 				{if $textKey != $primary}
-					<input type=text name="item[{$textKey}]" value="{ifset $item->$textKey}{$item->$textKey}{/ifset}">
+					{input item-{$textKey}}
 				{else}
-					<input type=hidden name="item[{$textKey}]" value={$item->$primary}>
+					{input item-{$textKey}}
 					{$item->$textKey}
 				{/if}
 			{elseif $item->$textKey}
-				{$item->$textKey}
-			{/if}			
+				{if $textItem->getType() == 'int'}
+					{$item->$textKey}
+				{elseif $textItem->getType() == 'date'}
+					{date('d.m.Y',$item->$textKey)}
+				{elseif $textItem->getType() == 'select'}
+					{$textItem->getSelect($item->$textKey)}
+				{else}
+					{$item->$textKey}
+				{/if}
+			{/if}
 		</td>
 		{/foreach}
 		<td>
-			{if $config->id == $item->$primary && $textKey != $primary}
-				<input type=submit name="save" value="Upravit">
+			{if $id == $item->$primary && $textKey != $primary}
+
+				{input save}
+				{input cancel}
 			{else}
 				<a href="{plink edit $item->$primary}">Upravit</a>
-				<a href="{link edit $item->$primary}">Inline</a>
+				<a n:href="this, id => $item->$primary">Inline</a>
+				<a n:href="edit $item->$primary">Inline</a>
 			{/if}
-		</td>			
+		</td>
 	</tr>
 </tbody>
 </table>

@@ -16,11 +16,8 @@ namespace JanSuchanek\DataGrid\Components\VisualPaginator;
  * @version    $Id: VisualPaginator.php 4 2009-07-14 15:22:02Z david@grudl.com $
  */
 
-/*use Nette\Application\Control;*/
-
-/*use Nette\Paginator;*/
-
-
+use Nette\Application\UI\Control;
+use Nette\Utils\Paginator;
 
 /**
  * Visual paginator control.
@@ -29,7 +26,7 @@ namespace JanSuchanek\DataGrid\Components\VisualPaginator;
  * @copyright  Copyright (c) 2009 David Grudl
  * @package    Nette Extras
  */
-class VisualPaginatorControl extends \Nette\Application\UI\Control
+class VisualPaginatorControl extends Control
 {
 	const DEFAULT_LIMIT = 20;
 
@@ -45,12 +42,12 @@ class VisualPaginatorControl extends \Nette\Application\UI\Control
 	private $limits = array(20,50,100);
 
 	/**
-	 * @return Nette\Paginator
+	 * @return Paginator
 	 */
 	public function getPaginator()
 	{
 		if (!$this->paginator) {
-			$this->paginator = new \Nette\Utils\Paginator;
+			$this->paginator = new Paginator;
 		}
 
 		if(!in_array($this->limit, $this->limits)){

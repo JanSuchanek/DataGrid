@@ -1,0 +1,124 @@
+{* NDataGrid — default template for Nette 3.2 + Latte 3 *}
+
+<div class="ndatagrid">
+	<p class="ndatagrid-count">Nalezeno: <strong>{$itemsCount}</strong></p>
+
+	{form listForm}
+	<table class="ndatagrid-table">
+	<thead>
+		{* Filter row *}
+		<tr class="ndatagrid-filters">
+			{foreach $cols as $colKey => $col}
+			<th>
+				{if $colKey !== $primary}
+					{input query-$colKey, class => 'ndatagrid-filter-input'}
+				{/if}
+			</th>
+			{/foreach}
+			<th>
+				{input search, class => 'btn btn-sm btn-primary'}
+				{input cancel, class => 'btn btn-sm btn-outline-secondary'}
+			</th>
+		</tr>
+
+		{* Header row with sorting *}
+		<tr class="ndatagrid-header">
+			{foreach $cols as $colKey => $col}
+			<th>
+				{if $order === $colKey}
+					{$col->getLabel()}
+					{if $sort === 'DESC'}
+						<a n:href="this, sort => null" class="ndatagrid-sort">▲</a> ▼
+					{else}
+						▲ <a n:href="this, sort => 'DESC'" class="ndatagrid-sort">▼</a>
+					{/if}
+				{else}
+					<a n:href="this, order => $colKey, sort => null" class="ndatagrid-sort">{$col->getLabel()}</a>
+				{/if}
+			</th>
+			{/foreach}
+			<th>Akce</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		<tr n:foreach="$items as $item" n:class="$editId === $item->$primary ? 'ndatagrid-editing'">
+			{foreach $cols as $colKey => $col}
+			<td>
+				{if $colKey === $primary}
+					{input items-{$item->$primary}}
+				{/if}
+
+				{if $editId === $item->$primary}
+					{* Inline edit mode *}
+					{if $colKey !== $primary}
+						{input item-$colKey}
+					{else}
+						{$item->$colKey}
+					{/if}
+				{elseif isset($item->$colKey)}
+					{if $col->getType() === 'int'}
+						{$col->getPrefix()}{$item->$colKey}{$col->getSuffix()}
+					{elseif $col->getType() === 'date'}
+						{$col->getPrefix()}{$item->$colKey|date:'d.m.Y'}{$col->getSuffix()}
+					{elseif $col->getType() === 'select'}
+						{$col->getSelect($item->$colKey)}
+					{else}
+						{$col->getPrefix()}{$item->$colKey}{$col->getSuffix()}
+					{/if}
+				{else}
+					{$col->getUnknown()}
+				{/if}
+			</td>
+			{/foreach}
+			<td class="ndatagrid-actions">
+				{if $editId === $item->$primary}
+					{input save, class => 'btn btn-sm btn-success'}
+					{input cancel, class => 'btn btn-sm btn-outline-secondary'}
+				{else}
+					<a href="{plink edit $item->$primary}" class="btn btn-sm btn-outline-primary">✏️</a>
+					<a n:href="this, editId => $item->$primary" class="btn btn-sm btn-outline-secondary">Inline</a>
+				{/if}
+			</td>
+		</tr>
+	</tbody>
+	</table>
+
+	{* Mass actions *}
+	<div n:if="count($cols) > 0" class="ndatagrid-mass-actions">
+		{input select, class => 'form-select form-select-sm d-inline-block w-auto'}
+		{input submit, class => 'btn btn-sm btn-primary'}
+	</div>
+	{/form}
+
+	{* Pagination *}
+	{if $paginator->getPageCount() > 1}
+	<nav class="ndatagrid-pagination">
+		<ul>
+			{if !$paginator->isFirst()}
+				<li><a n:href="this, page => $page - 1">« Předchozí</a></li>
+			{else}
+				<li class="disabled"><span>« Předchozí</span></li>
+			{/if}
+
+			{for $i = max(1, $page - 3); $i <= min($paginator->getPageCount(), $page + 3); $i++}
+				{if $i === $page}
+					<li class="active"><span>{$i}</span></li>
+				{else}
+					<li><a n:href="this, page => $i">{$i}</a></li>
+				{/if}
+			{/for}
+
+			{if !$paginator->isLast()}
+				<li><a n:href="this, page => $page + 1">Další »</a></li>
+			{else}
+				<li class="disabled"><span>Další »</span></li>
+			{/if}
+		</ul>
+
+		<span class="ndatagrid-page-info">
+			Stránka {$page} / {$paginator->getPageCount()}
+		</span>
+	</nav>
+	{/if}
+</div>

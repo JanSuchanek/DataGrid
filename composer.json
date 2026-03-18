@@ -1,0 +1,27 @@
+{
+    "name": "jansuchanek/datagrid",
+    "description": "Lightweight DataGrid component for Nette Framework — sorting, filtering, inline editing, mass actions, pagination",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.2",
+        "nette/application": "^3.2",
+        "nette/forms": "^3.2",
+        "nette/utils": "^4.0",
+        "latte/latte": "^3.0"
+    },
+    "require-dev": {
+        "nette/tester": "^2.6",
+        "nette/di": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "NDataGrid\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "NDataGrid\\Tests\\": "tests/"
+        }
+    }
+}

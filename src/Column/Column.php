@@ -48,11 +48,18 @@ class Column
 
 		// Set default operator/pattern per type
 		match ($type) {
-			'int', 'date', 'select', 'stav' => $this->operator = '= ?' and $this->pattern = [null, null],
-			default => $this->operator = 'LIKE ?' and $this->pattern = [null, '%'],
+			'int', 'date', 'select', 'stav' => $this->setOperatorPattern('= ?', null, null),
+			default => $this->setOperatorPattern('LIKE ?', null, '%'),
 		};
 
 		return $this;
+	}
+
+
+	private function setOperatorPattern(string $operator, ?string $left, ?string $right): void
+	{
+		$this->operator = $operator;
+		$this->pattern = [$left, $right];
 	}
 
 

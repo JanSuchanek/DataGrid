@@ -67,7 +67,7 @@ class DataGridControl extends Control
 	/** @var list<callable(mixed): void> */
 	public array $onSubmitProcess = [];
 
-	/** @var list<callable(Form, array, array, ?int): void> */
+	/** @var list<callable(Form, array<string, Column>, array<int|string, object>, ?int): void> */
 	public array $onInlineEdit = [];
 
 	// Persistent parameters
@@ -78,6 +78,7 @@ class DataGridControl extends Control
 	public ?string $sort = null;
 
 	/** @persistent */
+	/** @var array<string, string> */
 	public array $query = [];
 
 	/** @persistent */
@@ -97,6 +98,9 @@ class DataGridControl extends Control
 	// Column Management
 	// =====================
 
+	/**
+	 * @param array<string|int, string> $selection
+	 */
 	public function addColumn(string $name, string $label, string $type = 'text', array $selection = []): Column
 	{
 		$col = $this->getColumn($name);
@@ -340,8 +344,8 @@ class DataGridControl extends Control
 		};
 
 		$form->addSubmit('search', 'Hledej')->onClick[] = function (SubmitButton $button): void {
-			$values = $button->getForm()->getValues();
-			$this->query = (array) $values->query;
+			$values = $button->getForm()->getValues('array');
+			$this->query = (array) ($values['query'] ?? []);
 			foreach ($this->onQueryProcess as $cb) {
 				$cb($this);
 			}
@@ -381,7 +385,9 @@ class DataGridControl extends Control
 
 		$paginator = $this->getPaginator();
 
-		$this->template->setParameters([
+		/** @var \Nette\Bridges\ApplicationLatte\DefaultTemplate $template */
+		$template = $this->template;
+		$template->setParameters([
 			'itemsCount' => $paginator->getItemCount(),
 			'cols' => $this->columns,
 			'items' => $this->items,
@@ -394,7 +400,7 @@ class DataGridControl extends Control
 		]);
 
 		$view = $this->view ?? 'default';
-		$this->template->setFile(__DIR__ . '/templates/' . $view . '.latte');
-		$this->template->render();
+		$template->setFile(__DIR__ . '/templates/' . $view . '.latte');
+		$template->render();
 	}
 }

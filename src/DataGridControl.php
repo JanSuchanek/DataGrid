@@ -144,6 +144,7 @@ class DataGridControl extends Control
 	{
 		$primary = $this->primary;
 		foreach ($items as $item) {
+			/** @var int|string $key */
 			$key = $item->$primary;
 			$this->items[$key] = $item;
 		}
@@ -161,7 +162,7 @@ class DataGridControl extends Control
 
 	public function getItemCount(): int
 	{
-		return $this->paginator->getItemCount();
+		return $this->paginator->getItemCount() ?? 0;
 	}
 
 
@@ -321,7 +322,7 @@ class DataGridControl extends Control
 		$container = $form->addContainer('items');
 		foreach ($this->items as $item) {
 			$primary = $this->primary;
-			$container->addCheckbox((string) $item->$primary);
+			$container->addCheckbox(strval($item->$primary)); // @phpstan-ignore argument.type
 		}
 
 		// Query filters
@@ -344,8 +345,11 @@ class DataGridControl extends Control
 		};
 
 		$form->addSubmit('search', 'Hledej')->onClick[] = function (SubmitButton $button): void {
+			/** @var array<string, array<string, string>> $values */
 			$values = $button->getForm()->getValues('array');
-			$this->query = (array) ($values['query'] ?? []);
+			/** @var array<string, string> $queryValues */
+			$queryValues = $values['query'] ?? [];
+			$this->query = $queryValues;
 			foreach ($this->onQueryProcess as $cb) {
 				$cb($this);
 			}

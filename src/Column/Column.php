@@ -177,7 +177,7 @@ class Column
 		$name = $this->name;
 		$el = \Nette\Utils\Html::el('span');
 		$el->addText($this->getPrefix());
-		$el->addText(isset($data->$name) ? (string) $data->$name : $this->unknown);
+		$el->addText(isset($data->$name) ? strval($data->$name) : $this->unknown); // @phpstan-ignore argument.type
 		$el->addText($this->getSuffix());
 		return $el;
 	}

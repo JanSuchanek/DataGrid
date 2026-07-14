@@ -13,13 +13,13 @@
 <thead>
 <tr>
 	{foreach $cols as $textKey => $textItem}
-	<th>
+	<th class="text-nowrap">
 	{if $textKey != $primary}
 		{input query-{$textKey}}
 	{/if}
 	</th>
 	{/foreach}
-	<th>
+	<th class="text-nowrap">
 		{input search}
 		{input cancel}
 	</th>
@@ -27,7 +27,7 @@
 
 <tr>
 	{foreach $cols as $textKey => $textItem}
-	<th>
+	<th class="text-nowrap">
 		{if $order == $textKey}
 			{$textItem->label}
 
@@ -41,14 +41,14 @@
 		{/if}
 	</th>
 	{/foreach}
-	<th>Akce</th>
+	<th class="text-nowrap">Akce</th>
 </tr>
 </thead>
 
 <tbody>
 	<tr n:foreach="$items as $item">
 		{foreach $cols as $textKey => $textItem}
-		<td>
+		<td class="text-nowrap">
 			{if $textKey == $primary}
 				{input items-{$item->$primary}}
 			{/if}
@@ -72,7 +72,7 @@
 			{/if}
 		</td>
 		{/foreach}
-		<td>
+		<td class="text-nowrap">
 			{if $id == $item->$primary && $textKey != $primary}
 
 				{input save}
